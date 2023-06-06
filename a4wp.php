@@ -7,10 +7,10 @@ Description:
 Version: PLUGIN_VERSION
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+License: GPLv3 or later
+License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-Copyright 2018 Marcin Pietrzak (marcin@iworks.pl)
+Copyright 2023-PLUGIN_TILL_YEAR Marcin Pietrzak (marcin@iworks.pl)
 
 this program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as
@@ -37,7 +37,7 @@ if ( ! defined( 'WPINC' ) ) {
 define( 'IWORKS_A4WP_VERSION', 'PLUGIN_VERSION' );
 define( 'IWORKS_A4WP_PREFIX',  'iworks_a4wp_' );
 $base = dirname( __FILE__ );
-$vendor = $base.'/vendor';
+$vendor = $base.'/includes';
 
 /**
  * require: Iworksa4wp Class

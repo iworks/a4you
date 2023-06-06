@@ -1,4 +1,4 @@
-Plugin Name: a4y
+Plugin Name: a4you
 Author: Marcin Pietrzak ( iworks.pl )
 
 == Changelog ==

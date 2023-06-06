@@ -30,7 +30,7 @@ module.exports = function(grunt) {
         css_files_concat: {},
 
         plugin_dir: '',
-        plugin_file: 'a4y',
+        plugin_file: 'a4you',
 
         // Regex patterns to exclude from transation.
         translation: {
@@ -44,7 +44,7 @@ module.exports = function(grunt) {
                 'tests/.*', // Unit testing.
             ],
             pot_dir: 'languages/', // With trailing slash.
-            textdomain: 'a4y',
+            textdomain: 'a4you',
         },
     };
 
@@ -349,7 +349,7 @@ module.exports = function(grunt) {
 
         checktextdomain: {
             options: {
-                text_domain: ['a4y', 'IWORKS_RATE_TEXTDOMAIN', 'IWORKS_OPTIONS_TEXTDOMAIN'],
+                text_domain: ['a4you', 'IWORKS_RATE_TEXTDOMAIN', 'IWORKS_OPTIONS_TEXTDOMAIN'],
                 keywords: [ //List keyword specifications
                     '__:1,2d',
                     '_e:1,2d',
@@ -368,7 +368,7 @@ module.exports = function(grunt) {
                 ]
             },
             files: {
-                src: ['a4y.php', 'vendor/**/*.php'], //all php 
+                src: ['a4you.php', 'vendor/**/*.php'], //all php 
                 expand: true,
             },
         },

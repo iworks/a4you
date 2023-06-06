@@ -2,7 +2,7 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: a4y PLUGIN_VERSION\n"
+"Project-Id-Version: a4you PLUGIN_VERSION\n"
 "Report-Msgid-Bugs-To: https://iworks.pl\n"
 "POT-Creation-Date: 2017-11-24 09:02:02+00:00\n"
 "MIME-Version: 1.0\n"

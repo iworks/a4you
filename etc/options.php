@@ -1,6 +1,6 @@
 <?php
 
-function iworks_a4y_options() {
+function iworks_a4you_options() {
 	$options = array();
 	/**
 	 * main settings
@@ -8,17 +8,17 @@ function iworks_a4y_options() {
 	$options['index'] = array(
 		'version'    => '0.0',
 		'use_tabs'   => true,
-		'page_title' => __( 'Analitics 4 You', 'a4y' ),
+		'page_title' => __( 'Analitics 4 You', 'a4you' ),
 		'menu'       => 'options',
 		'options'    => array(
 			array(
 				'type'  => 'heading',
-				'label' => __( 'General', 'a4y' ),
+				'label' => __( 'General', 'a4you' ),
 			),
 			array(
 				'name'              => 'tag_id',
 				'type'              => 'text',
-				'th'                => __( 'Google Tag ID', 'a4y' ),
+				'th'                => __( 'Google Tag ID', 'a4you' ),
 				'placeholder'       => 'G-xxxxxxxxxx',
 				'sanitize_callback' => 'esc_html',
 				'since'             => '1.0.0',
@@ -26,12 +26,12 @@ function iworks_a4y_options() {
 			array(
 				'name'              => 'is_user_logged_in',
 				'type'              => 'checkbox',
-				'th'                => __( 'Logged Users', 'a4y' ),
+				'th'                => __( 'Logged Users', 'a4you' ),
 				'default'           => 1,
 				'sanitize_callback' => 'absint',
 				'classes'           => array( 'switch-button' ),
 				'since'             => '1.0.0',
-				'description'       => esc_html__( 'Use analitics for logged users too.', 'a4y' ),
+				'description'       => esc_html__( 'Use analitics for logged users too.', 'a4you' ),
 			),
 		),
 		'metaboxes'  => array(),

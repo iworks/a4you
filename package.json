@@ -1,10 +1,10 @@
 {
-    "name": "a4y",
-    "title": "a4y",
-    "tagline": "a4y",
+    "name": "a4you",
+    "title": "a4you",
+    "tagline": "a4you",
     "description": "Simple Analytics for You!",
     "version": "0.0.1",
-    "homepage": "http://a4y.iworks.pl/",
+    "homepage": "http://a4you.iworks.pl/",
     "author": [{
         "name": "Marcin Pietrzak",
         "email": "marcin@iworks.pl",
@@ -62,7 +62,7 @@
     "keywords": [],
     "repository": {
         "type": "git",
-        "url": "git@github.com:iworks/a4y.git"
+        "url": "git@github.com:iworks/a4you.git"
     },
     "license": "GPL-3.0"
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * a4y — simpel analitycs for you
+ * a4you — simpel analitycs for you
  *
  * @package           PLUGIN_NAME
  * @author            AUTHOR_NAME
@@ -8,7 +8,7 @@
  * @license           GPL-3.0-or-later
  *
  * @wordpress-plugin
- * Plugin Name:       a4y
+ * Plugin Name:       a4you
  * Plugin URI:        PLUGIN_URI
  * Description:       PLUGIN_DESCRIPTION
  * Version:           PLUGIN_VERSION
@@ -45,15 +45,15 @@ if ( ! defined( 'WPINC' ) ) {
  * static options
  */
 define( 'IWORKS_A4WP_VERSION', 'PLUGIN_VERSION' );
-define( 'IWORKS_A4WP_PREFIX', 'iworks_a4y_' );
+define( 'IWORKS_A4WP_PREFIX', 'iworks_a4you_' );
 $base   = dirname( __FILE__ );
 $vendor = $base . '/includes';
 
 /**
- * require: Iworksa4y Class
+ * require: Iworksa4you Class
  */
-if ( ! class_exists( 'iworks_a4y' ) ) {
-	require_once $vendor . '/iworks/a4y.php';
+if ( ! class_exists( 'iworks_a4you' ) ) {
+	require_once $vendor . '/iworks/a4you.php';
 }
 /**
  * configuration
@@ -69,41 +69,41 @@ if ( ! class_exists( 'iworks_options' ) ) {
 /**
  * i18n
  */
-load_plugin_textdomain( 'a4y', false, plugin_basename( dirname( __FILE__ ) ) . '/languages' );
+load_plugin_textdomain( 'a4you', false, plugin_basename( dirname( __FILE__ ) ) . '/languages' );
 
 /**
  * load options
  */
-$iworks_a4y_options = new iworks_options();
-$iworks_a4y_options->set_option_function_name( 'iworks_a4y_options' );
-$iworks_a4y_options->set_option_prefix( IWORKS_A4WP_PREFIX );
+$iworks_a4you_options = new iworks_options();
+$iworks_a4you_options->set_option_function_name( 'iworks_a4you_options' );
+$iworks_a4you_options->set_option_prefix( IWORKS_A4WP_PREFIX );
 
-function iworks_a4y_get_options() {
-	global $iworks_a4y_options;
-	return $iworks_a4y_options;
+function iworks_a4you_get_options() {
+	global $iworks_a4you_options;
+	return $iworks_a4you_options;
 }
 
-function iworks_a4y_options_init() {
-	global $iworks_a4y_options;
-	$iworks_a4y_options->options_init();
+function iworks_a4you_options_init() {
+	global $iworks_a4you_options;
+	$iworks_a4you_options->options_init();
 }
 
-function iworks_a4y_activate() {
-	$iworks_a4y_options = new iworks_options();
-	$iworks_a4y_options->set_option_function_name( 'iworks_a4y_options' );
-	$iworks_a4y_options->set_option_prefix( IWORKS_A4WP_PREFIX );
-	$iworks_a4y_options->activate();
+function iworks_a4you_activate() {
+	$iworks_a4you_options = new iworks_options();
+	$iworks_a4you_options->set_option_function_name( 'iworks_a4you_options' );
+	$iworks_a4you_options->set_option_prefix( IWORKS_A4WP_PREFIX );
+	$iworks_a4you_options->activate();
 }
 
-function iworks_a4y_deactivate() {
-	global $iworks_a4y_options;
-	$iworks_a4y_options->deactivate();
+function iworks_a4you_deactivate() {
+	global $iworks_a4you_options;
+	$iworks_a4you_options->deactivate();
 }
 
-$iworks_a4y = new iworks_a4y();
+$iworks_a4you = new iworks_a4you();
 
 /**
  * install & uninstall
  */
-register_activation_hook( __FILE__, 'iworks_a4y_activate' );
-register_deactivation_hook( __FILE__, 'iworks_a4y_deactivate' );
+register_activation_hook( __FILE__, 'iworks_a4you_activate' );
+register_deactivation_hook( __FILE__, 'iworks_a4you_deactivate' );

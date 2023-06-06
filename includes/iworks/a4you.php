@@ -22,13 +22,13 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-if ( class_exists( 'iworks_a4y' ) ) {
+if ( class_exists( 'iworks_a4you' ) ) {
 	return;
 }
 
 require_once( dirname( dirname( __FILE__ ) ) . '/iworks.php' );
 
-class iworks_a4y extends iworks {
+class iworks_a4you extends iworks {
 
 	private $capability;
 
@@ -37,7 +37,7 @@ class iworks_a4y extends iworks {
 	public function __construct() {
 		parent::__construct();
 		$this->version    = 'PLUGIN_VERSION';
-		$this->capability = apply_filters( 'iworks_a4y_capability', 'manage_options' );
+		$this->capability = apply_filters( 'iworks_a4you_capability', 'manage_options' );
 		/**
 		 * hooks
 		 */
@@ -53,9 +53,9 @@ class iworks_a4y extends iworks {
 	}
 
 	public function init() {
-		iworks_a4y_options_init();
-		global $iworks_a4y_options;
-		$this->options = $iworks_a4y_options;
+		iworks_a4you_options_init();
+		global $iworks_a4you_options;
+		$this->options = $iworks_a4you_options;
 	}
 
 	public function admin_init() {
@@ -66,12 +66,12 @@ class iworks_a4y extends iworks {
 	 * Plugin row data
 	 */
 	public function plugin_row_meta( $links, $file ) {
-		if ( $this->dir . '/a4y.php' == $file ) {
+		if ( $this->dir . '/a4you.php' == $file ) {
 			if ( ! is_multisite() && current_user_can( $this->capability ) ) {
 				$links[] = '<a href="admin.php?page=' . $this->dir . '/admin/index.php">' . __( 'Settings' ) . '</a>';
 			}
 			/* start:free */
-			$links[] = '<a href="http://iworks.pl/donate/a4y.php">' . __( 'Donate' ) . '</a>';
+			$links[] = '<a href="http://iworks.pl/donate/a4you.php">' . __( 'Donate' ) . '</a>';
 			/* end:free */
 		}
 		return $links;

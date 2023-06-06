@@ -1,10 +1,10 @@
 {
-    "name": "a4wp",
-    "title": "a4wp",
-    "tagline": "a4wp",
-    "description": "a4wp",
+    "name": "a4y",
+    "title": "a4y",
+    "tagline": "a4y",
+    "description": "Simple Analytics for You!",
     "version": "0.0.1",
-    "homepage": "http://a4wp.iworks.pl/",
+    "homepage": "http://a4y.iworks.pl/",
     "author": [{
         "name": "Marcin Pietrzak",
         "email": "marcin@iworks.pl",
@@ -62,7 +62,7 @@
     "keywords": [],
     "repository": {
         "type": "git",
-        "url": "git@github.com:iworks/a4wp.git"
+        "url": "git@github.com:iworks/a4y.git"
     },
     "license": "GPL-3.0"
 }

@@ -22,13 +22,13 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-if ( class_exists( 'iworks_a4wp' ) ) {
+if ( class_exists( 'iworks_a4y' ) ) {
 	return;
 }
 
 require_once( dirname( dirname( __FILE__ ) ) . '/iworks.php' );
 
-class iworks_a4wp extends iworks {
+class iworks_a4y extends iworks {
 
 	private $capability;
 
@@ -37,7 +37,7 @@ class iworks_a4wp extends iworks {
 	public function __construct() {
 		parent::__construct();
 		$this->version    = 'PLUGIN_VERSION';
-		$this->capability = apply_filters( 'iworks_a4wp_capability', 'manage_options' );
+		$this->capability = apply_filters( 'iworks_a4y_capability', 'manage_options' );
 		/**
 		 * hooks
 		 */
@@ -53,9 +53,9 @@ class iworks_a4wp extends iworks {
 	}
 
 	public function init() {
-		iworks_a4wp_options_init();
-		global $iworks_a4wp_options;
-		$this->options = $iworks_a4wp_options;
+		iworks_a4y_options_init();
+		global $iworks_a4y_options;
+		$this->options = $iworks_a4y_options;
 	}
 
 	public function admin_init() {
@@ -66,40 +66,54 @@ class iworks_a4wp extends iworks {
 	 * Plugin row data
 	 */
 	public function plugin_row_meta( $links, $file ) {
-		if ( $this->dir . '/a4wp.php' == $file ) {
+		if ( $this->dir . '/a4y.php' == $file ) {
 			if ( ! is_multisite() && current_user_can( $this->capability ) ) {
 				$links[] = '<a href="admin.php?page=' . $this->dir . '/admin/index.php">' . __( 'Settings' ) . '</a>';
 			}
 			/* start:free */
-			$links[] = '<a href="http://iworks.pl/donate/a4wp.php">' . __( 'Donate' ) . '</a>';
+			$links[] = '<a href="http://iworks.pl/donate/a4y.php">' . __( 'Donate' ) . '</a>';
 			/* end:free */
 		}
 		return $links;
 	}
 
 	public function add_code() {
+		/**
+		 * maybe not?
+		 */
+		if ( ! $this->should_it_be_used() ) {
+			return;
+		}
 		$tag_id = $this->options->get_option( 'tag_id' );
 		if ( empty( $tag_id ) ) {
 			return;
 		}
-		echo '<!-- Google tag (gtag.js) -->';
+		echo PHP_EOL,'<!-- PLUGIN_NAME (PLUGIN_VERSION) -->',PHP_EOL;
+		echo '<!-- Google tag (gtag.js) -->',PHP_EOL;
 		printf(
-			'<script async src="%s"></script>',
+			'<script async src="%s"></script>%s',
 			esc_url(
 				add_query_arg(
 					'id',
 					$tag_id,
 					'https://www.googletagmanager.com/gtag/js'
 				)
-			)
+			),
+			PHP_EOL
 		);
-		echo '<script>';
-		echo 'window.dataLayer = window.dataLayer || [];';
-		echo 'function gtag(){dataLayer.push(arguments);}';
-		echo "gtag('js', new Date());";
-		printf( "gtag('config', '%s');", $tag_id );
-		echo '</script>';
-		echo PHP_EOL;
+		echo '<script>',PHP_EOL;
+		echo 'window.dataLayer = window.dataLayer || [];',PHP_EOL;
+		echo 'function gtag(){dataLayer.push(arguments);}',PHP_EOL;
+		echo "gtag('js', new Date());",PHP_EOL;
+		printf( "gtag('config', '%s');%s", $tag_id, PHP_EOL );
+		echo '</script>',PHP_EOL;
+	}
+
+	public function should_it_be_used() {
+		if ( is_user_logged_in() ) {
+			return ! empty( $this->options->get_option( 'is_user_logged_in' ) );
+		}
+		return true;
 	}
 
 	private function add_event( $event, $params = array() ) {
@@ -107,6 +121,12 @@ class iworks_a4wp extends iworks {
 	}
 
 	public function maybe_print_events() {
+		/**
+		 * maybe not?
+		 */
+		if ( ! $this->should_it_be_used() ) {
+			return;
+		}
 		/**
 		 * is search?
 		 */

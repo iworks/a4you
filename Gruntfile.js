@@ -30,7 +30,7 @@ module.exports = function(grunt) {
         css_files_concat: {},
 
         plugin_dir: '',
-        plugin_file: 'a4wp',
+        plugin_file: 'a4y',
 
         // Regex patterns to exclude from transation.
         translation: {
@@ -44,7 +44,7 @@ module.exports = function(grunt) {
                 'tests/.*', // Unit testing.
             ],
             pot_dir: 'languages/', // With trailing slash.
-            textdomain: 'a4wp',
+            textdomain: 'a4y',
         },
     };
 
@@ -278,66 +278,51 @@ module.exports = function(grunt) {
         replace: {
             options: {
                 patterns: [{
-                        match: /AUTHOR_NAME/g,
-                        replace: '<%= pkg.author[0].name %>'
-                    },
-                    {
-                        match: /AUTHOR_URI/g,
-                        replace: '<%= pkg.author[0].uri %>'
-                    },
-                    {
-                        match: /BUILDTIME/g,
-                        replace: buildtime
-                    },
-                    {
-                        match: /IWORKS_RATE_TEXTDOMAIN/g,
-                        replace: '<%= pkg.name %>'
-                    },
-                    {
-                        match: /IWORKS_OPTIONS_TEXTDOMAIN/g,
-                        replace: '<%= pkg.name %>'
-                    },
-                    {
-                        match: /PLUGIN_DESCRIPTION/g,
-                        replace: '<%= pkg.description %>'
-                    },
-                    {
-                        match: /PLUGIN_NAME/g,
-                        replace: '<%= pkg.name %>'
-                    },
-                    {
-                        match: /PLUGIN_REQUIRES_PHP/g,
-                        replace: '<%= pkg.requires.PHP %>'
-                    },
-                    {
-                        match: /PLUGIN_REQUIRES_WORDPRESS/g,
-                        replace: '<%= pkg.requires.WordPress %>'
-                    },
-                    {
-                        match: /PLUGIN_TAGLINE/g,
-                        replace: '<%= pkg.tagline %>'
-                    },
-                    {
-                        match: /PLUGIN_TILL_YEAR/g,
-                        replace: buildyear
-                    },
-                    {
-                        match: /PLUGIN_TITLE/g,
-                        replace: '<%= pkg.title %>'
-                    },
-                    {
-                        match: /PLUGIN_URI/g,
-                        replace: '<%= pkg.homepage %>'
-                    },
-                    {
-                        match: /PLUGIN_VERSION/g,
-                        replace: '<%= pkg.version %>'
-                    },
-                    {
-                        match: /^Version: .+$/g,
-                        replace: 'Version: <%= pkg.version %>'
-                    },
-                ]
+                    match: /AUTHOR_NAME/g,
+                    replace: '<%= pkg.author[0].name %>'
+                }, {
+                    match: /AUTHOR_URI/g,
+                    replace: '<%= pkg.author[0].uri %>'
+                }, {
+                    match: /BUILDTIME/g,
+                    replace: buildtime
+                }, {
+                    match: /IWORKS_RATE_TEXTDOMAIN/g,
+                    replace: '<%= pkg.name %>'
+                }, {
+                    match: /IWORKS_OPTIONS_TEXTDOMAIN/g,
+                    replace: '<%= pkg.name %>'
+                }, {
+                    match: /PLUGIN_DESCRIPTION/g,
+                    replace: '<%= pkg.description %>'
+                }, {
+                    match: /PLUGIN_NAME/g,
+                    replace: '<%= pkg.name %>'
+                }, {
+                    match: /PLUGIN_REQUIRES_PHP/g,
+                    replace: '<%= pkg.requires.PHP %>'
+                }, {
+                    match: /PLUGIN_REQUIRES_WORDPRESS/g,
+                    replace: '<%= pkg.requires.WordPress %>'
+                }, {
+                    match: /PLUGIN_TAGLINE/g,
+                    replace: '<%= pkg.tagline %>'
+                }, {
+                    match: /PLUGIN_TILL_YEAR/g,
+                    replace: buildyear
+                }, {
+                    match: /PLUGIN_TITLE/g,
+                    replace: '<%= pkg.title %>'
+                }, {
+                    match: /PLUGIN_URI/g,
+                    replace: '<%= pkg.homepage %>'
+                }, {
+                    match: /PLUGIN_VERSION/g,
+                    replace: '<%= pkg.version %>'
+                }, {
+                    match: /^Version: .+$/g,
+                    replace: 'Version: <%= pkg.version %>'
+                }, ]
             },
             files: {
                 expand: true,
@@ -364,7 +349,7 @@ module.exports = function(grunt) {
 
         checktextdomain: {
             options: {
-                text_domain: ['a4wp', 'IWORKS_RATE_TEXTDOMAIN', 'IWORKS_OPTIONS_TEXTDOMAIN'],
+                text_domain: ['a4y', 'IWORKS_RATE_TEXTDOMAIN', 'IWORKS_OPTIONS_TEXTDOMAIN'],
                 keywords: [ //List keyword specifications
                     '__:1,2d',
                     '_e:1,2d',
@@ -383,7 +368,7 @@ module.exports = function(grunt) {
                 ]
             },
             files: {
-                src: ['a4wp.php', 'vendor/**/*.php'], //all php 
+                src: ['a4y.php', 'vendor/**/*.php'], //all php 
                 expand: true,
             },
         },

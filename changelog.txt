@@ -1,4 +1,4 @@
-Plugin Name: a4wp
+Plugin Name: a4y
 Author: Marcin Pietrzak ( iworks.pl )
 
 == Changelog ==

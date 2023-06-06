@@ -1,0 +1,5 @@
+Plugin Name: a4wp
+Author: Marcin Pietrzak ( iworks.pl )
+
+== Changelog ==
+

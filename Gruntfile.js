@@ -23,18 +23,11 @@ module.exports = function(grunt) {
     var conf = {
 
         // Concatenate those JS files into a single file (target: [source, source, ...]).
-        js_files_concat: {
-            'assets/scripts/admin/admin.js': [
-                'assets/scripts/admin/src/datepicker.js',
-                'assets/scripts/admin/src/select2.js'
-            ]
-        },
+        js_files_concat: {},
 
         // SASS files to process. Resulting CSS files will be minified as well.
         css_files_compile: {},
-        css_files_concat: {
-            'assets/styles/admin.css': ['assets/styles/admin/*.css']
-        },
+        css_files_concat: {},
 
         plugin_dir: '',
         plugin_file: 'a4wp',

@@ -74,6 +74,7 @@ load_plugin_textdomain( 'a4you', false, plugin_basename( dirname( __FILE__ ) ) .
 /**
  * load options
  */
+global $iworks_a4you_options;
 $iworks_a4you_options = new iworks_options();
 $iworks_a4you_options->set_option_function_name( 'iworks_a4you_options' );
 $iworks_a4you_options->set_option_prefix( IWORKS_A4WP_PREFIX );

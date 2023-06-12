@@ -49,7 +49,15 @@ class iworks_a4you extends iworks {
 		 * [GA4] Recommended events
 		 */
 		add_action( 'wp_login', array( $this, 'event_login' ) );
-
+		/**
+		 * Add event
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param string $event
+		 * @param array $params
+		 */
+		add_action( 'a4you_add_event', array( $this, 'add_event' ), 10, 2 );
 	}
 
 	public function init() {
@@ -116,7 +124,15 @@ class iworks_a4you extends iworks {
 		return true;
 	}
 
-	private function add_event( $event, $params = array() ) {
+	/**
+	 * Add own event
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $event
+	 * @param array $params
+	 */
+	public function add_event( $event, $params = array() ) {
 		$this->events[ $event ] = $params;
 	}
 
@@ -128,22 +144,129 @@ class iworks_a4you extends iworks {
 			return;
 		}
 		/**
+		 * 404?
+		 */
+		if ( is_404() ) {
+			$this->add_event(
+				'select_content',
+				array(
+					'content_type' => 'http_error',
+					'content_id'   => 404,
+				)
+			);
+		}
+		/**
 		 * is search?
 		 */
-		if ( is_search() ) {
+		elseif ( is_search() ) {
 			$this->add_event( 'search', array( 'search_term' => get_search_query() ) );
 		}
 		/**
 		 * single content
 		 */
-		if ( is_singular() ) {
+		elseif ( is_singular() ) {
 			$this->add_event(
 				'select_content',
 				array(
-					'content_type' => get_post_type(),
-					'content_id'   => get_the_ID(),
+					'content_type'  => get_post_type(),
+					'content_id'    => get_the_ID(),
+					'content_title' => get_the_title(),
 				)
 			);
+		}
+		/**
+		 * is_category
+		 */
+		elseif ( is_archive() ) {
+			$queried_object = get_queried_object();
+			/**
+			 * taxonomy
+			 */
+			if ( is_a( $queried_object, 'WP_Term' ) ) {
+				$this->add_event(
+					'select_content',
+					array(
+						'content_type' => $queried_object->taxonomy,
+						'content_id'   => $queried_object->cat_name,
+					)
+				);
+			}
+			/**
+			 * date
+			 */
+			elseif ( is_date() ) {
+				if ( is_year() ) {
+					$this->add_event(
+						'select_content',
+						array(
+							'content_type'    => 'date',
+							'content_subtype' => 'year',
+							'content_id'      => get_query_var( 'year' ),
+						)
+					);
+				} elseif ( is_month() ) {
+					$this->add_event(
+						'select_content',
+						array(
+							'content_type'    => 'date',
+							'content_subtype' => 'month',
+							'content_id'      => sprintf(
+								'%d-%02d',
+								get_query_var( 'year' ),
+								get_query_var( 'monthnum' )
+							),
+						)
+					);
+				} elseif ( is_day() ) {
+					$this->add_event(
+						'select_content',
+						array(
+							'content_type'    => 'date',
+							'content_subtype' => 'day',
+							'content_id'      => sprintf(
+								'%d-%02d-%02d',
+								get_query_var( 'year' ),
+								get_query_var( 'monthnum' ),
+								get_query_var( 'day' )
+							),
+						)
+					);
+				}
+			}
+			/**
+			 * is_author
+			 */
+			elseif ( is_author() ) {
+				$this->add_event(
+					'select_content',
+					array(
+						'content_type' => 'author',
+						'content_id'   => get_query_var( 'author_name' ),
+					)
+				);
+			}
+		}
+		/**
+		 * logged user
+		 *
+		 * @since 1.0.0
+		 */
+		if ( is_user_logged_in() ) {
+			if ( $this->options->get_option( 'user_role' ) ) {
+				$user = wp_get_current_user();
+				foreach ( $user->roles as $role ) {
+					$this->add_event(
+						'user',
+						array(
+							'role' => $role,
+						)
+					);
+				}
+			} else {
+				$this->add_event( 'user', array( 'role' => 'no-role' ) );
+			}
+		} else {
+			$this->add_event( 'user', array( 'role' => 'visitor' ) );
 		}
 		/**
 		 * have I smth to show?
@@ -151,9 +274,9 @@ class iworks_a4you extends iworks {
 		if ( empty( $this->events ) ) {
 			return;
 		}
-		echo '<script>';
+		echo PHP_EOL,'<!-- PLUGIN_NAME (PLUGIN_VERSION) -->',PHP_EOL;
+		echo '<script>',PHP_EOL;
 		foreach ( $this->events as $event => $params ) {
-
 			$p = array();
 			foreach ( $params as $json_key => $json_value ) {
 				$p[] = sprintf(
@@ -162,7 +285,6 @@ class iworks_a4you extends iworks {
 					esc_attr( $json_value )
 				);
 			}
-
 			if ( empty( $p ) ) {
 				printf(
 					'gtag("event", "%s" );',
@@ -175,8 +297,9 @@ class iworks_a4you extends iworks {
 					implode( ',', $p )
 				);
 			}
+			echo PHP_EOL;
 		}
-		echo '</script>';
+		echo '</script>',PHP_EOL;
 	}
 
 	public function event_login() {

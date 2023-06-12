@@ -24,6 +24,10 @@ function iworks_a4you_options() {
 				'since'             => '1.0.0',
 			),
 			array(
+				'type'  => 'heading',
+				'label' => __( 'User', 'a4you' ),
+			),
+			array(
 				'name'              => 'is_user_logged_in',
 				'type'              => 'checkbox',
 				'th'                => __( 'Logged Users', 'a4you' ),
@@ -32,6 +36,16 @@ function iworks_a4you_options() {
 				'classes'           => array( 'switch-button' ),
 				'since'             => '1.0.0',
 				'description'       => esc_html__( 'Use analitics for logged users too.', 'a4you' ),
+			),
+			array(
+				'name'              => 'user_role',
+				'type'              => 'checkbox',
+				'th'                => __( 'Roles', 'a4you' ),
+				'default'           => 1,
+				'sanitize_callback' => 'absint',
+				'classes'           => array( 'switch-button' ),
+				'since'             => '1.0.0',
+				'description'       => esc_html__( 'Log logged user roles.', 'a4you' ),
 			),
 		),
 		'metaboxes'  => array(),

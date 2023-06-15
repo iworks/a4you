@@ -24,6 +24,16 @@ function iworks_a4you_options() {
 				'since'             => '1.0.0',
 			),
 			array(
+				'name'              => 'debug',
+				'type'              => 'checkbox',
+				'th'                => __( 'Debug Mode', 'a4you' ),
+				'default'           => 0,
+				'sanitize_callback' => 'absint',
+				'classes'           => array( 'switch-button' ),
+				'since'             => '1.0.0',
+				'description'       => esc_html__( 'You can enable debug mode for the events from your personal device or for the events from all user devices. When troubleshooting your tag installation, it\'s best to enable debug mode for your personal device so you can easily identify your device from Debug Device in DebugView.', 'a4you' ),
+			),
+			array(
 				'type'  => 'heading',
 				'label' => __( 'User', 'a4you' ),
 			),

@@ -2,7 +2,7 @@
 
 /*
 
-Copyright 2016-2017 Marcin Pietrzak (marcin@iworks.pl)
+Copyright 2016-PLUGIN_TILL_YEAR Marcin Pietrzak (marcin@iworks.pl)
 
 this program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as
@@ -39,7 +39,7 @@ class iworks {
 		/**
 		 * static settings
 		 */
-		$this->dev  = ( defined( 'IWORKS_DEV_MODE' ) && IWORKS_DEV_MODE )? '':'.min';
+		$this->dev  = ( defined( 'IWORKS_DEV_MODE' ) && IWORKS_DEV_MODE ) ? '' : '.min';
 		$this->base = dirname( __FILE__ );
 		$this->dir  = basename( dirname( $this->base ) );
 	}
@@ -47,7 +47,7 @@ class iworks {
 	public function get_version( $file = null ) {
 		if ( defined( 'IWORKS_DEV_MODE' ) && IWORKS_DEV_MODE ) {
 			if ( null != $file ) {
-				$file = dirname( $this->base ). $file;
+				$file = dirname( $this->base ) . $file;
 				if ( is_file( $file ) ) {
 					return md5_file( $file );
 				}
@@ -80,12 +80,12 @@ class iworks {
 	protected function print_table_body( $post_id, $fields ) {
 		echo '<table class="widefat striped"><tbody>';
 		foreach ( $fields as $name => $data ) {
-			$key = $this->get_meta_name( $name );
+			$key   = $this->get_meta_name( $name );
 			$value = $this->get_post_meta( $post_id, $name );
 			/**
 			 * extra
 			 */
-			$extra = isset( $data['placeholder'] )? sprintf( ' placeholder="%s" ', esc_attr( $data['placeholder'] ) ) : '';
+			$extra = isset( $data['placeholder'] ) ? sprintf( ' placeholder="%s" ', esc_attr( $data['placeholder'] ) ) : '';
 			foreach ( array( 'placeholder', 'style', 'class', 'id' ) as $extra_key ) {
 				if ( isset( $data[ $extra_key ] ) ) {
 					$extra .= sprintf( ' min="%d" ', esc_attr( $data[ $extra_key ] ) );
@@ -110,7 +110,7 @@ class iworks {
 						intval( $value ),
 						$extra
 					);
-				break;
+					break;
 				case 'date':
 					$date = intval( $this->get_post_meta( $post_id, $name ) );
 					if ( empty( $date ) ) {
@@ -121,7 +121,7 @@ class iworks {
 						$this->get_meta_name( $name ),
 						$date
 					);
-			break;
+					break;
 			}
 			echo '</td>';
 			echo '</tr>';

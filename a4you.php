@@ -53,7 +53,7 @@ $vendor = $base . '/includes';
  * require: Iworksa4you Class
  */
 if ( ! class_exists( 'iworks_a4you' ) ) {
-	require_once $vendor . '/iworks/a4you.php';
+	require_once $vendor . '/iworks/class-iworks-a4you.php';
 }
 /**
  * configuration

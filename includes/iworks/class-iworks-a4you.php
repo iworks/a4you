@@ -48,14 +48,15 @@ class iworks_a4you extends iworks {
 		/**
 		 * hooks
 		 */
-		add_action( 'init', array( $this, 'init' ) );
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
-		add_action( 'wp_head', array( $this, 'add_code' ), 0 );
-		add_action( 'wp_head', array( $this, 'action_wp_head_add_common_events' ), PHP_INT_MAX );
-		add_action( 'wp_footer', array( $this, 'action_wp_footer_maybe_print' ), PHP_INT_MAX );
-		add_action( 'shutdown', array( $this, 'maybe_dev_mode_debug' ), PHP_INT_MAX );
-		add_action( 'wp_login', array( $this, 'event_login' ) );
+		add_action( 'init', array( $this, 'init' ) );
 		add_action( 'plugins_loaded', array( $this, 'action_plugins_loaded' ) );
+		add_action( 'shutdown', array( $this, 'maybe_dev_mode_debug' ), PHP_INT_MAX );
+		add_action( 'wp_footer', array( $this, 'action_wp_footer_maybe_print' ), PHP_INT_MAX );
+		add_action( 'wp_head', array( $this, 'action_wp_head_add_common_events' ), PHP_INT_MAX );
+		add_action( 'wp_head', array( $this, 'add_code' ), 0 );
+		add_action( 'wp_login', array( $this, 'event_login' ) );
+		add_action( 'admin_notices', array( $this, 'maybe_show_missing_configuration_notice' ) );
 		/**
 		 * Add event
 		 *
@@ -65,9 +66,21 @@ class iworks_a4you extends iworks {
 		 * @param array $params
 		 */
 		add_action( 'a4you_add_event', array( $this, 'add_event' ), 10, 2 );
-		add_action( 'a4you_add_event', array( $this, 'add_event' ), 10, 3 );
 		add_action( 'a4you_add_gtag', array( $this, 'add_gtag' ), 10, 2 );
 		add_action( 'a4you_add_gtag', array( $this, 'add_gtag' ), 10, 3 );
+	}
+
+	/**
+	 * Get option page url
+	 *
+	 * @since 1.0.0
+	 */
+	private function get_settings_url() {
+		return add_query_arg(
+			'page',
+			$this->options->get_option_name( 'index' ),
+			admin_url( 'options-general.php' )
+		);
 	}
 
 	public function init() {
@@ -88,11 +101,7 @@ class iworks_a4you extends iworks {
 			if ( ! is_multisite() && current_user_can( $this->capability ) ) {
 				$links[] = sprintf(
 					'<a href="%s">%s</a>',
-					add_query_arg(
-						'page',
-						'iworks_a4you_index',
-						admin_url( 'options-general.php' )
-					),
+					$this->get_settings_url(),
 					__( 'Settings', 'a4you' )
 				);
 			}
@@ -458,5 +467,27 @@ class iworks_a4you extends iworks {
 		do_action( 'a4you/loaded' );
 	}
 
+	/**
+	 * Show missing configuration notice
+	 *
+	 * @since 1.0.0
+	 */
+	public function maybe_show_missing_configuration_notice() {
+		$screen = get_current_screen();
+		if ( 'dashboard' !== $screen->base ) {
+			return;
+		}
+		echo '<div class="notice notice-warning">';
+		echo wpautop(
+			esc_html__( 'Since the analyst\'s Google Analitycs has not been entered yet - it will not work.', 'a4you' )
+		);
+		echo  wpautop(
+			sprintf(
+				__( 'Please go to the <a href="%s">configuration</a> to enter the identifier.', 'a4you' ),
+				$this->get_settings_url()
+			)
+		);
+		echo '</div>';
+	}
 
 }

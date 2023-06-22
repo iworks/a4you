@@ -30,8 +30,25 @@ require_once( dirname( dirname( __FILE__ ) ) . '/iworks.php' );
 
 class iworks_a4you extends iworks {
 
+	/**
+	 * capability to rule them
+	 *
+	 * @since 1.0.0
+	 */
 	private $capability;
 
+	/**
+	 * GTAG Config Group
+	 *
+	 * @since 1.0.0
+	 */
+	private $gtag_config_group = 'a4you';
+
+	/**
+	 * GTAG tags array
+	 *
+	 * @since 1.0.0
+	 */
 	private $gtag = array(
 		'config' => array(),
 		'js'     => array(
@@ -44,7 +61,7 @@ class iworks_a4you extends iworks {
 	public function __construct() {
 		parent::__construct();
 		$this->version    = 'PLUGIN_VERSION';
-		$this->capability = apply_filters( 'iworks_a4you_capability', 'manage_options' );
+		$this->capability = apply_filters( 'a4you/capability', 'manage_options' );
 		/**
 		 * hooks
 		 */
@@ -134,11 +151,18 @@ class iworks_a4you extends iworks {
 		/**
 		 * config
 		 */
-		$this->gtag['config'][ $tag_id ] = array();
+		$this->gtag['config'][ $tag_id ] = array(
+			/**
+			 * filter grup name
+			 *
+			 * @since 1.0.0
+			 *
+			 * @param string $gtag_config_group
+			 */
+			'groups' => apply_filters( 'a4you/config_group_name', $this->gtag_config_group ),
+		);
 		if ( $this->options->get_option( 'debug' ) ) {
-			$this->gtag['config'][ $tag_id ] = array(
-				'debug_mode' => true,
-			);
+			$this->gtag['config'][ $tag_id ]['debug_mode'] = true;
 		}
 		echo PHP_EOL,'<!-- PLUGIN_NAME (PLUGIN_VERSION) -->',PHP_EOL;
 		echo '<!-- Google tag (gtag.js) -->',PHP_EOL;
@@ -158,9 +182,11 @@ class iworks_a4you extends iworks {
 		echo 'function gtag(){dataLayer.push(arguments);}',PHP_EOL;
 		/**
 		 * apply_filters
+		 *
+		 * @since 1.0.0
 		 */
 		foreach ( $this->gtag as $type => $value ) {
-			$this->gtag[ $type ] = apply_filters( 'iworks_a4you_array_' . $type, $value );
+			$this->gtag[ $type ] = apply_filters( 'a4you/gtag_array_' . $type, $value );
 		}
 		/**
 		 * config & js
@@ -213,17 +239,26 @@ class iworks_a4you extends iworks {
 		$this->gtag[ $type ][ $event ] = $params;
 	}
 
+	/**
+	 * Add events to configuration
+	 *
+	 * @since 1.0.0
+	 */
 	public function action_wp_head_add_common_events() {
 		/**
 		 * maybe not?
+		 *
+		 * @since 1.0.0
 		 */
 		if ( ! $this->should_it_be_used() ) {
 			return;
 		}
 		/**
 		 * 404?
+		 *
+		 * @since 1.0.0
 		 */
-		elseif ( apply_filters( 'iworks_a4you_is_404', is_404() ) ) {
+		elseif ( apply_filters( 'a4you/is_404', is_404() ) ) {
 			$this->add_event(
 				'select_content',
 				array(
@@ -234,12 +269,14 @@ class iworks_a4you extends iworks {
 		}
 		/**
 		 * is search?
+		 *
+		 * @since 1.0.0
 		 */
-		elseif ( apply_filters( 'iworks_a4you_is_search', is_search() ) ) {
+		elseif ( apply_filters( 'a4you/is_search', is_search() ) ) {
 			$params        = array(
 				'search_term' => get_search_query(),
 			);
-			$search_params = apply_filters( 'iworks_a4you_event_search_params', array() );
+			$search_params = apply_filters( 'a4you/event_search_params', array() );
 			foreach ( $search_params as $param_key ) {
 				$value = filter_input( INPUT_GET, $param_key );
 				if ( empty( $value ) ) {
@@ -254,8 +291,10 @@ class iworks_a4you extends iworks {
 		}
 		/**
 		 * single content
+		 *
+		 * @since 1.0.0
 		 */
-		elseif ( apply_filters( 'iworks_a4you_is_singular', is_singular() ) ) {
+		elseif ( apply_filters( 'a4you/is_singular', is_singular() ) ) {
 			$this->add_event(
 				'select_content',
 				array(
@@ -267,8 +306,10 @@ class iworks_a4you extends iworks {
 		}
 		/**
 		 * is_category
+		 *
+		 * @since 1.0.0
 		 */
-		elseif ( apply_filters( 'iworks_a4you_is_archive', is_archive() ) ) {
+		elseif ( apply_filters( 'a4you/is_archive', is_archive() ) ) {
 			$queried_object = get_queried_object();
 			/**
 			 * taxonomy
@@ -361,9 +402,20 @@ class iworks_a4you extends iworks {
 		}
 	}
 
+	/**
+	 * print events on body end
+	 *
+	 * @since 1.0.0
+	 */
 	public function action_wp_footer_maybe_print() {
 		$type = 'event';
-		$data = apply_filters( 'iworks_a4you_array_' . $type, $this->gtag[ $type ] );
+
+		/*
+		 * Filter GTAG array events
+		 *
+		 * @since 1.0.0
+		 */
+		$data = apply_filters( 'a4you/array_' . $type, $this->gtag[ $type ] );
 		/**
 		 * have I smth to show?
 		 */
@@ -377,6 +429,14 @@ class iworks_a4you extends iworks {
 			if ( $add_debug ) {
 				$config['debug_mode'] = true;
 			}
+			/**
+			 * filter grup name
+			 *
+			 * @since 1.0.0
+			 *
+			 * @param string $gtag_config_group
+			 */
+			$config['send_to'] = apply_filters( 'a4you/config_group_name', $this->gtag_config_group );
 			$this->print_one_gtag( $type, $key, $config );
 		}
 		echo '</script>',PHP_EOL;
@@ -405,7 +465,11 @@ class iworks_a4you extends iworks {
 	 * maybe dev debug?
 	 */
 	public function maybe_dev_mode_debug() {
-		if ( defined( 'IWORKS_DEV_MODE' ) && IWORKS_DEV_MODE ) {
+		if (
+			isset( $_SERVER['SERVER_NAME'] )
+			&& defined( 'IWORKS_DEV_MODE' )
+			&& IWORKS_DEV_MODE
+		) {
 			echo '<div class="iworks-a4you-debug" style="max-width:600px;margin:0 auto">';
 			foreach ( $this->gtag as $type => $values ) {
 				if ( empty( $values ) ) {
@@ -460,6 +524,12 @@ class iworks_a4you extends iworks {
 			// $this->objects['debug-bar'] = new iworks_a4you_integration_debug_bar();
 		}
 		/**
+		 * a4you_gtag_array
+		 *
+		 * @since 1.0.0
+		 */
+		$this->gtag = apply_filters( 'a4you/gtag_array', $this->gtag );
+		/**
 		 * a4you loaded action
 		 *
 		 * @since 1.0.0
@@ -475,6 +545,9 @@ class iworks_a4you extends iworks {
 	public function maybe_show_missing_configuration_notice() {
 		$screen = get_current_screen();
 		if ( 'dashboard' !== $screen->base ) {
+			return;
+		}
+		if ( ! empty( $this->options->get_option( 'tag_id' ) ) ) {
 			return;
 		}
 		echo '<div class="notice notice-warning">';

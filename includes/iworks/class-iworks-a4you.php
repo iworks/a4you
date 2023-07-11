@@ -465,10 +465,26 @@ class iworks_a4you extends iworks {
 	 * maybe dev debug?
 	 */
 	public function maybe_dev_mode_debug() {
+		/**
+		 * prevent in ajax
+		 */
+		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+			return;
+		}
+		/**
+		 * prevent in no server
+		 */
+		if ( ! isset( $_SERVER['SERVER_NAME'] ) ) {
+			return;
+		}
+		/**
+		 * check is debug really?
+		 */
 		if (
-			isset( $_SERVER['SERVER_NAME'] )
-			&& defined( 'IWORKS_DEV_MODE' )
-			&& IWORKS_DEV_MODE
+			/**
+			 * Allow to turn show/hide debug table
+			 */
+			apply_filters( 'a4you/debug/show', defined( 'IWORKS_DEV_MODE' ) && IWORKS_DEV_MODE )
 		) {
 			echo '<div class="iworks-a4you-debug" style="max-width:600px;margin:0 auto">';
 			foreach ( $this->gtag as $type => $values ) {

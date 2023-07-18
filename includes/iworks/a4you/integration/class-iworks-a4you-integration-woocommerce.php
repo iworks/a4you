@@ -31,7 +31,11 @@ class iworks_a4you_integration_woocommerce extends iworks_a4you_integration {
 		parent::__construct();
 		add_filter( 'iworks_a4you_options', array( $this, 'filter_add_options' ) );
 		add_filter( 'iworks_a4you_array_set', array( $this, 'filter_add_set' ) );
-		add_filter( 'iworks_a4you_event_search_params', array( $this, 'filter_add_event_search_params' ) );
+        add_filter( 'iworks_a4you_event_search_params', array( $this, 'filter_add_event_search_params' ) );
+        /**
+         * WooCommerce
+         */
+        add_filter( 'woocommerce_loop_add_to_cart_args', array( $this, 'filter_woocommerce_loop_add_to_cart_args' ), 10, 2 );
 	}
 
 	public function filter_add_event_search_params( $params ) {
@@ -88,5 +92,23 @@ class iworks_a4you_integration_woocommerce extends iworks_a4you_integration {
 		return $options;
 	}
 
+    public function filter_woocommerce_loop_add_to_cart_args( $args, $product ) {
+        if ( $product->is_purchasable() && $product->is_in_stock() ) {
+            $data = array(
+                'currency' => get_woocommerce_currency_symbol(),
+                'value' => $product->get_price(),
+                'items' => array(
+                    array(
+                        'item_id' => $product->get_sku(),
+                        'item_name' => $product->get_name(),
+                        'price' => $product->get_price(),
+                        'quantity' => 1,
+                    )
+                )
+            );
+            $args['attributes']['data-a4you'] = json_encode( $data );
+        }
+        return $args;
+    }
 }
 

@@ -85,6 +85,15 @@ class iworks_a4you extends iworks {
 		add_action( 'a4you_add_event', array( $this, 'add_event' ), 10, 2 );
 		add_action( 'a4you_add_gtag', array( $this, 'add_gtag' ), 10, 2 );
 		add_action( 'a4you_add_gtag', array( $this, 'add_gtag' ), 10, 3 );
+		/**
+		 * assets
+		 */
+		add_action( 'wp_enqueue_scripts', array( $this, 'action_register_assets' ), 0 );
+		add_action( 'wp_enqueue_scripts', array( $this, 'action_enqueue_assets' ) );
+		/**
+		 * gtag config
+		 */
+		add_filter( 'a4you/gtag/args/defaults', array( $this, 'filter_get_gtag_args_defaults' ) );
 	}
 
 	/**
@@ -579,4 +588,77 @@ class iworks_a4you extends iworks {
 		echo '</div>';
 	}
 
+	/**
+	 * register styles
+	 *
+	 * @since 1.0.0
+	 */
+	public function action_register_assets() {
+		/**
+		 * JS
+		 */
+		$file = '/assets/scripts/frontend/a4you' . $this->dev . '.js';
+		wp_register_script(
+			__CLASS__,
+			plugins_url( $file, $this->base ),
+			array(),
+			$this->get_version( $file )
+		);
+	}
+
+	/**
+	 * Enquque styles
+	 *
+	 * @since 1.3.0
+	 */
+	public function action_enqueue_assets() {
+		wp_enqueue_script( __CLASS__ );
+		wp_localize_script( __CLASS__, 'a4you', $this->get_config_javascript() );
+	}
+	private function get_config_javascript() {
+		$config = array(
+			'i18n'        => array(),
+			/**
+			 * gtag
+			 */
+			'gtag'        => array(
+				'groups' => apply_filters( 'a4you/config_group_name', $this->gtag_config_group ),
+			),
+			/**
+			 * debug
+			 */
+			'debug'       => $this->options->get_option( 'debug' ) ? 'debug' : 'none',
+			/**
+			 * WooCommerce
+			 */
+			'woocommerce' => array(
+				'currency' => get_woocommerce_currency_symbol(),
+			),
+		);
+		return apply_filters(
+			'a4you/function/get_config_javascript',
+			$config
+		);
+	}
+
+	public function filter_get_gtag_args_defaults( $args ) {
+		if ( ! is_array( $args ) ) {
+			$args = array();
+		}
+		/**
+		 * filter grup name
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param string $gtag_config_group
+		 */
+		$args['groups'] = apply_filters( 'a4you/config_group_name', $this->gtag_config_group );
+		/**
+		 * debug
+		 */
+		if ( $this->options->get_option( 'debug' ) ) {
+			$args['debug_mode'] = true;
+		}
+		return $args;
+	}
 }

@@ -23,7 +23,11 @@ module.exports = function(grunt) {
     var conf = {
 
         // Concatenate those JS files into a single file (target: [source, source, ...]).
-        js_files_concat: {},
+        js_files_concat: {
+            'assets/scripts/frontend/a4you.js': [
+                'assets/scripts/src/frontend/woocommerce.js'
+            ]
+        },
 
         // SASS files to process. Resulting CSS files will be minified as well.
         css_files_compile: {},
@@ -97,7 +101,12 @@ module.exports = function(grunt) {
             all: {
                 files: [{
                     expand: true,
-                    src: ['admin/*.js', '!**/*.min.js', '!shared*'],
+                    src: [
+                        'admin/*.js',
+                        'frontend/*.js',
+                        '!**/*.min.js',
+                        '!shared*'
+                    ],
                     cwd: 'assets/scripts/',
                     dest: 'assets/scripts/',
                     ext: '.min.js',
@@ -218,7 +227,6 @@ module.exports = function(grunt) {
                         poedit: true, // Includes common Poedit headers.
                         'x-poedit-keywordslist': true // Include a list of all possible gettext functions.
                     },
-                    exclude: ['node_modules', '.git', '.sass-cache', 'release'],
                     type: 'wp-plugin',
                     updateTimestamp: true,
                     updatePoFiles: true

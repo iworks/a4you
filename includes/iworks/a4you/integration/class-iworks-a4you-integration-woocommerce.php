@@ -32,6 +32,8 @@ class iworks_a4you_integration_woocommerce extends iworks_a4you_integration {
 		add_filter( 'iworks_a4you_options', array( $this, 'filter_add_options' ) );
 		add_filter( 'iworks_a4you_array_set', array( $this, 'filter_add_set' ) );
 		add_filter( 'iworks_a4you_event_search_params', array( $this, 'filter_add_event_search_params' ) );
+		add_action( 'woocommerce_after_cart', array( $this, 'action_maybe_add_event' ) );
+		add_action( 'woocommerce_after_checkout_form', array( $this, 'action_maybe_add_event' ) );
 		/**
 		 * WooCommerce
 		 */
@@ -67,7 +69,6 @@ class iworks_a4you_integration_woocommerce extends iworks_a4you_integration {
 				$gtag_set['currency'] = $currency;
 			}
 		}
-
 		return $gtag_set;
 	}
 
@@ -195,6 +196,43 @@ class iworks_a4you_integration_woocommerce extends iworks_a4you_integration {
 			);
 		}
 		return $link;
+	}
+
+	public function action_maybe_add_event() {
+		$event_name = false;
+		if ( is_cart() ) {
+			$event_name = 'view_cart';
+		}
+		if ( is_checkout() ) {
+			$event_name = 'begin_checkout';
+		}
+		if ( false === $event_name ) {
+			return;
+		}
+		$items = array();
+		$cart  = WC()->cart;
+		foreach ( $cart->get_cart() as $cart_item_key => $cart_item ) {
+			$items[] = $this->get_product_data( $cart_item['data'], $cart_item['quantity'] );
+		}
+		/**
+		 * event parameters
+		 */
+		$parameters = array(
+			'currency' => get_woocommerce_currency_symbol(),
+			'value'    => $cart->get_cart_contents_total(),
+			'items'    => $items,
+		);
+		/**
+		 * add coupons
+		 */
+		if ( is_checkout() ) {
+			$coupons = $cart->get_applied_coupons();
+			if ( ! empty( $coupons ) ) {
+				$parameters['coupon'] = implode( ',', $coupons );
+			}
+		}
+		$parameters = apply_filters( 'a4you/gtag/parameters/view_cart', $parameters );
+		do_action( 'a4you_add_event', $event_name, $parameters );
 	}
 }
 

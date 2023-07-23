@@ -227,14 +227,14 @@ class iworks_a4you extends iworks {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $event
-	 * @param array $params
+	 * @param string $event_name
+	 * @param array $event_parameters
 	 */
-	public function add_event( $event, $params = array() ) {
+	public function add_event( $event_name, $event_parameters = array() ) {
 		$this->add_gtag(
 			'event',
-			$event,
-			$params
+			$event_name,
+			$event_parameters
 		);
 	}
 
@@ -418,7 +418,6 @@ class iworks_a4you extends iworks {
 	 */
 	public function action_wp_footer_maybe_print() {
 		$type = 'event';
-
 		/*
 		 * Filter GTAG array events
 		 *

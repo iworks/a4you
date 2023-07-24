@@ -628,11 +628,9 @@ class iworks_a4you extends iworks {
 			 */
 			'debug'       => $this->options->get_option( 'debug' ) ? 'debug' : 'none',
 			/**
-			 * WooCommerce
+			 * WooCommerce Config Placeholder
 			 */
-			'woocommerce' => array(
-				'currency' => get_woocommerce_currency_symbol(),
-			),
+			'woocommerce' => array(),
 		);
 		return apply_filters(
 			'a4you/function/get_config_javascript',

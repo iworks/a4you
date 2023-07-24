@@ -32,6 +32,7 @@ class iworks_a4you_integration_woocommerce extends iworks_a4you_integration {
 		add_filter( 'iworks_a4you_options', array( $this, 'filter_add_options' ) );
 		add_filter( 'iworks_a4you_array_set', array( $this, 'filter_add_set' ) );
 		add_filter( 'iworks_a4you_event_search_params', array( $this, 'filter_add_event_search_params' ) );
+		add_filter( 'a4you/function/get_config_javascript', array( $this, 'filter_get_config_javascript' ) );
 		add_action( 'woocommerce_after_cart', array( $this, 'action_maybe_add_event' ) );
 		add_action( 'woocommerce_after_checkout_form', array( $this, 'action_maybe_add_event' ) );
 		/**
@@ -233,6 +234,21 @@ class iworks_a4you_integration_woocommerce extends iworks_a4you_integration {
 		}
 		$parameters = apply_filters( 'a4you/gtag/parameters/view_cart', $parameters );
 		do_action( 'a4you_add_event', $event_name, $parameters );
+	}
+
+	/**
+	 * Add WooCommerce Currency to JavaScript config
+	 *
+	 * @since 1.0.0
+	 */
+	public function filter_get_config_javascript( $config ) {
+		if (
+			! isset( $config['woocommerce'] )
+			|| ! is_array( $config['woocommerce'] )
+		) {
+			$config['woocommerce'] = array();
+		}
+		$config['woocommerce']['currency'] = get_woocommerce_currency_symbol();
 	}
 }
 

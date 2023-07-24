@@ -3,7 +3,7 @@
     "title": "a4you",
     "tagline": "a4you",
     "description": "Simple Analytics for You!",
-    "version": "0.0.6",
+    "version": "0.0.7",
     "homepage": "http://a4you.iworks.pl/",
     "author": [{
         "name": "Marcin Pietrzak",
@@ -15,7 +15,7 @@
         "PHP": "8.0"
     },
     "tested": {
-        "WordPress": "6.4"
+        "WordPress": "6.3"
     },
     "devDependencies": {
         "grunt": "^1",

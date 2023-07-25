@@ -167,7 +167,13 @@ class iworks_a4you extends iworks {
 		/**
 		 * config
 		 */
-		$this->gtag['config'][ $tag_id ] = $this->filter_gtag_event_parameters_add_defaults( array() );
+		$parameters = array(
+			'groups' => apply_filters( 'a4you/gtag/config/group_name', $this->gtag_config_group ),
+		);
+		if ( $this->options->get_option( 'debug' ) ) {
+			$parameters['debug_mode'] = 'true';
+		}
+		$this->gtag['config'][ $tag_id ] = $parameters;
 		echo PHP_EOL,'<!-- PLUGIN_NAME (PLUGIN_VERSION) -->',PHP_EOL;
 		echo '<!-- Google tag (gtag.js) -->',PHP_EOL;
 		printf(
@@ -190,14 +196,14 @@ class iworks_a4you extends iworks {
 		 * @since 1.0.0
 		 */
 		foreach ( $this->gtag as $type => $value ) {
-			$this->gtag[ $type ] = apply_filters( 'a4you/gtag_array_' . $type, $value );
+			$this->gtag[ $type ] = apply_filters( 'a4you/gtag/array/' . $type, $value );
 		}
 		/**
 		 * config & js
 		 */
 		foreach ( array( 'config', 'js' ) as $type ) {
-			foreach ( $this->gtag[ $type ] as $key => $params ) {
-				$this->print_one_gtag( $type, $key, $params );
+			foreach ( $this->gtag[ $type ] as $key => $parameters ) {
+				$this->print_one_gtag( $type, $key, $parameters );
 			}
 		}
 		/**
@@ -425,29 +431,18 @@ class iworks_a4you extends iworks {
 		if ( empty( $data ) ) {
 			return;
 		}
-		$add_debug = $this->options->get_option( 'debug' );
 		echo PHP_EOL,'<!-- PLUGIN_NAME (PLUGIN_VERSION) -->',PHP_EOL;
 		echo '<script>',PHP_EOL;
-		foreach ( $data as $key => $config ) {
-			if ( $add_debug ) {
-				$config['debug_mode'] = true;
-			}
-			/**
-			 * filter grup name
-			 *
-			 * @since 1.0.0
-			 *
-			 * @param string $gtag_config_group
-			 */
-			$config['send_to'] = apply_filters( 'a4you/config_group_name', $this->gtag_config_group );
-			$this->print_one_gtag( $type, $key, $config );
+		foreach ( $data as $key => $parameters ) {
+			$parameters = $this->filter_gtag_event_parameters_add_defaults( $parameters );
+			$this->print_one_gtag( $type, $key, $parameters );
 		}
 		echo '</script>',PHP_EOL;
 	}
 
 	private function print_one_gtag( $type, $key, $parameters = array() ) {
 		$patern = 'gtag("%s", "%s", %s);';
-		if ( empty( $params ) ) {
+		if ( empty( $parameters ) ) {
 			$patern = 'gtag("%s", "%s");';
 		}
 		if ( 'js' === $type ) {
@@ -547,7 +542,7 @@ class iworks_a4you extends iworks {
 		 *
 		 * @since 1.0.0
 		 */
-		$this->gtag = apply_filters( 'a4you/gtag_array', $this->gtag );
+		$this->gtag = apply_filters( 'a4you/gtag/array', $this->gtag );
 		/**
 		 * a4you loaded action
 		 *
@@ -616,7 +611,7 @@ class iworks_a4you extends iworks {
 			 * gtag
 			 */
 			'gtag'        => array(
-				'groups' => apply_filters( 'a4you/config_group_name', $this->gtag_config_group ),
+				'groups' => apply_filters( 'a4you/gtag/config/group_name', $this->gtag_config_group ),
 			),
 			/**
 			 * debug
@@ -644,13 +639,13 @@ class iworks_a4you extends iworks {
 		 *
 		 * @param string $gtag_config_group
 		 */
-		$args['groups'] = apply_filters( 'a4you/config_group_name', $this->gtag_config_group );
+		$args['send_to'] = apply_filters( 'a4you/gtag/config/group_name', $this->gtag_config_group );
 		/**
 		 * debug
 		 */
 		if ( $this->options->get_option( 'debug' ) ) {
-			$args['debug_mode'] = true;
-			$args['source']     = 'a4you';
+			$args['debug_mode']   = 'true';
+			$args['debug_source'] = 'a4you';
 		}
 		return $args;
 	}

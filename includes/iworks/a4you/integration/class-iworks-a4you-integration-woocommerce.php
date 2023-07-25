@@ -64,12 +64,7 @@ class iworks_a4you_integration_woocommerce extends iworks_a4you_integration {
 		/**
 		 * Set currency
 		 */
-		if ( $this->options->get_option( 'wc_currency' ) ) {
-			$currency = get_woocommerce_currency();
-			if ( ! empty( $currency ) ) {
-				$gtag_set['currency'] = $currency;
-			}
-		}
+		$gtag_set = $this->add_curency( $gtag_set );
 		return $gtag_set;
 	}
 
@@ -96,25 +91,37 @@ class iworks_a4you_integration_woocommerce extends iworks_a4you_integration {
 			'classes'           => array( 'switch-button' ),
 			'since'             => '1.0.0',
 		);
+		$options['index']['options'][] = array(
+			'type'  => 'subheading',
+			'label' => __( 'Selectors', 'a4you' ),
+		);
+		$options['index']['options'][] = array(
+			'type'              => 'text',
+			'name'              => 'wc_selector_related_products',
+			'th'                => __( 'Related Products', 'a4you' ),
+			'default'           => 'section.related.products',
+			'sanitize_callback' => 'esc_attr',
+			'since'             => '1.0.0',
+			'classes'           => array( 'regular-text', 'code' ),
+		);
 		return $options;
 	}
 
 	public function filter_woocommerce_loop_add_to_cart_args( $args, $product ) {
 		if ( $product->is_purchasable() && $product->is_in_stock() ) {
-			$data = apply_filters(
-				'a4you/gtag/parameters/add_to_cart',
-				array(
-					'currency' => get_woocommerce_currency_symbol(),
-					'value'    => $product->get_price(),
-					'items'    => array(
-						$this->get_product_data( $product ),
-					),
-				)
+			$parameters                                        = array(
+				'value' => $product->get_price(),
+				'items' => array(
+					$this->get_product_data( $product ),
+				),
 			);
+			$parameters                                        = $this->add_curency( $parameters, true );
+			$parameters                                        = apply_filters( 'a4you/gtag/add_to_cart/parameters', $parameters );
+			$parameters                                        = apply_filters( 'a4you/gtag/default/parameters', $parameters );
 			$args['attributes']['data-a4you_add_to_cart_loop'] = 'a4you';
 			$args['attributes']['data-a4you_event']            = 'event';
 			$args['attributes']['data-a4you_event_name']       = 'add_to_cart';
-			$args['attributes']['data-a4you_event_parameters'] = json_encode( $data );
+			$args['attributes']['data-a4you_event_parameters'] = json_encode( $parameters, $this->json_encode_flags );
 		}
 		return apply_filters( 'a4you/woocommerce_loop_add_to_cart_args', $args );
 	}
@@ -170,16 +177,15 @@ class iworks_a4you_integration_woocommerce extends iworks_a4you_integration {
 		/**
 		 * data
 		 */
-		$data = apply_filters(
-			'a4you/gtag/parameters/remove_from_cart',
-			array(
-				'currency' => get_woocommerce_currency_symbol(),
-				'value'    => $cart_item['line_total'],
-				'items'    => array(
-					$this->get_product_data( $product, $cart_item['quantity'] ),
-				),
-			)
+		$parameters = array(
+			'value' => $cart_item['line_total'],
+			'items' => array(
+				$this->get_product_data( $product, $cart_item['quantity'] ),
+			),
 		);
+		$parameters = $this->add_curency( $parameters, true );
+		$parameters = apply_filters( 'a4you/gtag/remove_from_cart/parameters', $parameters );
+		$parameters = apply_filters( 'a4you/gtag/default/parameters', $parameters );
 		/**
 		 * attributes
 		 */
@@ -187,7 +193,7 @@ class iworks_a4you_integration_woocommerce extends iworks_a4you_integration {
 			'data-a4you_event_remove_from_cart' => 'a4you',
 			'data-a4you_event'                  => 'event',
 			'data-a4you_event_name'             => 'remove_from_cart',
-			'data-a4you_event_parameters'       => json_encode( $data ),
+			'data-a4you_event_parameters'       => json_encode( $parameters, $this->json_encode_flags ),
 		);
 		foreach ( $attributes as $key => $value ) {
 			$link = preg_replace(
@@ -219,10 +225,10 @@ class iworks_a4you_integration_woocommerce extends iworks_a4you_integration {
 		 * event parameters
 		 */
 		$parameters = array(
-			'currency' => get_woocommerce_currency_symbol(),
-			'value'    => $cart->get_cart_contents_total(),
-			'items'    => $items,
+			'value' => $cart->get_cart_contents_total(),
+			'items' => $items,
 		);
+		$parameters = $this->add_curency( $parameters, true );
 		/**
 		 * add coupons
 		 */
@@ -232,7 +238,8 @@ class iworks_a4you_integration_woocommerce extends iworks_a4you_integration {
 				$parameters['coupon'] = implode( ',', $coupons );
 			}
 		}
-		$parameters = apply_filters( 'a4you/gtag/parameters/view_cart', $parameters );
+		$parameters = apply_filters( 'a4you/gtag/' . $event_name . '/parameters', $parameters );
+		$parameters = apply_filters( 'a4you/gtag/default/parameters', $parameters );
 		do_action( 'a4you_add_event', $event_name, $parameters );
 	}
 
@@ -248,7 +255,21 @@ class iworks_a4you_integration_woocommerce extends iworks_a4you_integration {
 		) {
 			$config['woocommerce'] = array();
 		}
-		$config['woocommerce']['currency'] = get_woocommerce_currency_symbol();
+		$config['woocommerce']              = $this->add_curency( $config['woocommerce'], true );
+		$config['woocommerce']['selectors'] = array(
+			'related_products' => $this->options->get_option( 'wc_selector_related_products' ),
+		);
+		return $config;
+	}
+
+	private function add_curency( $config, $force = false ) {
+		if ( $force || $this->options->get_option( 'wc_currency' ) ) {
+			$currency = get_woocommerce_currency();
+			if ( ! empty( $currency ) ) {
+				$config['currency'] = $currency;
+			}
+		}
+		return $config;
 	}
 }
 

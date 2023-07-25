@@ -27,6 +27,8 @@ abstract class iworks_a4you_integration {
 
 	protected $options;
 
+	protected $json_encode_flags = JSON_NUMERIC_CHECK;
+
 	protected function __construct() {
 		global $iworks_a4you_options;
 		$this->options = $iworks_a4you_options;

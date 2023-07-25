@@ -58,6 +58,13 @@ class iworks_a4you extends iworks {
 		'event'  => array(),
 	);
 
+	/**
+	 * common json encode flags
+	 *
+	 * @since 1.0.0
+	 */
+	private $json_encode_flags = JSON_NUMERIC_CHECK;
+
 	public function __construct() {
 		parent::__construct();
 		$this->version    = 'PLUGIN_VERSION';
@@ -93,7 +100,7 @@ class iworks_a4you extends iworks {
 		/**
 		 * gtag config
 		 */
-		add_filter( 'a4you/gtag/args/defaults', array( $this, 'filter_get_gtag_args_defaults' ) );
+		add_filter( 'a4you/gtag/default/parameters', array( $this, 'filter_gtag_event_parameters_add_defaults' ) );
 	}
 
 	/**
@@ -160,19 +167,7 @@ class iworks_a4you extends iworks {
 		/**
 		 * config
 		 */
-		$this->gtag['config'][ $tag_id ] = array(
-			/**
-			 * filter grup name
-			 *
-			 * @since 1.0.0
-			 *
-			 * @param string $gtag_config_group
-			 */
-			'groups' => apply_filters( 'a4you/config_group_name', $this->gtag_config_group ),
-		);
-		if ( $this->options->get_option( 'debug' ) ) {
-			$this->gtag['config'][ $tag_id ]['debug_mode'] = true;
-		}
+		$this->gtag['config'][ $tag_id ] = $this->filter_gtag_event_parameters_add_defaults( array() );
 		echo PHP_EOL,'<!-- PLUGIN_NAME (PLUGIN_VERSION) -->',PHP_EOL;
 		echo '<!-- Google tag (gtag.js) -->',PHP_EOL;
 		printf(
@@ -209,7 +204,7 @@ class iworks_a4you extends iworks {
 		 * set
 		 */
 		if ( ! empty( $this->gtag['set'] ) ) {
-			printf( "gtag('set', %s);", json_encode( $this->gtag['set'] ) );
+			printf( "gtag('set', %s);", json_encode( $this->gtag['set'], $this->json_encode_flags ) );
 			echo PHP_EOL;
 		}
 		echo '</script>',PHP_EOL;
@@ -234,7 +229,7 @@ class iworks_a4you extends iworks {
 		$this->add_gtag(
 			'event',
 			$event_name,
-			$event_parameters
+			$this->filter_gtag_event_parameters_add_defaults( $event_parameters )
 		);
 	}
 
@@ -450,7 +445,7 @@ class iworks_a4you extends iworks {
 		echo '</script>',PHP_EOL;
 	}
 
-	private function print_one_gtag( $type, $key, $params = array() ) {
+	private function print_one_gtag( $type, $key, $parameters = array() ) {
 		$patern = 'gtag("%s", "%s", %s);';
 		if ( empty( $params ) ) {
 			$patern = 'gtag("%s", "%s");';
@@ -461,7 +456,7 @@ class iworks_a4you extends iworks {
 				$patern = 'gtag("%s", %s);';
 			}
 		}
-		printf( $patern, $type, $key, json_encode( $params ) );
+		printf( $patern, $type, $key, json_encode( $parameters, $this->json_encode_flags ) );
 		echo PHP_EOL;
 	}
 
@@ -638,7 +633,7 @@ class iworks_a4you extends iworks {
 		);
 	}
 
-	public function filter_get_gtag_args_defaults( $args ) {
+	public function filter_gtag_event_parameters_add_defaults( $args ) {
 		if ( ! is_array( $args ) ) {
 			$args = array();
 		}
@@ -655,6 +650,7 @@ class iworks_a4you extends iworks {
 		 */
 		if ( $this->options->get_option( 'debug' ) ) {
 			$args['debug_mode'] = true;
+			$args['source']     = 'a4you';
 		}
 		return $args;
 	}

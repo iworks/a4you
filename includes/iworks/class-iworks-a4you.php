@@ -18,9 +18,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
  */
 
-if ( ! defined( 'WPINC' ) ) {
-	die;
-}
+defined( 'ABSPATH' ) || exit; // Exit if accessed directly
 
 if ( class_exists( 'iworks_a4you' ) ) {
 	return;
@@ -135,7 +133,7 @@ class iworks_a4you extends iworks {
 				$links[] = sprintf(
 					'<a href="%s">%s</a>',
 					$this->get_settings_url(),
-					__( 'Settings', 'a4you' )
+					esc_html__( 'Settings', 'a4you' )
 				);
 			}
 			$links[] = sprintf(
@@ -451,7 +449,12 @@ class iworks_a4you extends iworks {
 				$patern = 'gtag("%s", %s);';
 			}
 		}
-		printf( $patern, $type, $key, json_encode( $parameters, $this->json_encode_flags ) );
+		printf(
+			$patern,
+			esc_attr( $type ),
+			esc_attr( $key ),
+			json_encode( $parameters, $this->json_encode_flags )
+		);
 		echo PHP_EOL;
 	}
 
@@ -489,11 +492,11 @@ class iworks_a4you extends iworks {
 				if ( empty( $values ) ) {
 					continue;
 				}
-				printf( '<h4 class="iworks-a4you-debug-title">%s</h4>', $type );
+				printf( '<h4 class="iworks-a4you-debug-title">%s</h4>', esc_html( $type ) );
 				echo '<table class="iworks-a4you-debug-table" style="border: 1px solid black">';
 				foreach ( $values as $key => $params ) {
 					echo '<tr>';
-					printf( '<td class="iworks-a4you-debug-table-key">%s</td>', $key );
+					printf( '<td class="iworks-a4you-debug-table-key">%s</td>', esc_attr( $key ) );
 					if ( empty( $params ) ) {
 						$params = array();
 					}
@@ -570,8 +573,12 @@ class iworks_a4you extends iworks {
 		);
 		echo  wpautop(
 			sprintf(
-				__( 'Please go to the <a href="%s">configuration</a> to enter the identifier.', 'a4you' ),
-				$this->get_settings_url()
+				esc_html__( 'Please go to the %s to enter the identifier.', 'a4you' ),
+				sprintf(
+					'<a href="%s">%s</a>',
+					$this->get_settings_url(),
+					esc_html__( 'configuration', 'a4you' )
+				)
 			)
 		);
 		echo '</div>';

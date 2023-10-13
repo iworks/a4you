@@ -1,8 +1,7 @@
 <?php
-
 /*
 
-Copyright 2016-PLUGIN_TILL_YEAR Marcin Pietrzak (marcin@iworks.pl)
+Copyright 2023-PLUGIN_TILL_YEAR Marcin Pietrzak (marcin@iworks.pl)
 
 this program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as
@@ -19,9 +18,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
  */
 
-if ( ! defined( 'WPINC' ) ) {
-	die;
-}
+defined( 'ABSPATH' ) || exit; // Exit if accessed directly
 
 if ( class_exists( 'iworks' ) ) {
 	return;

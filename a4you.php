@@ -108,3 +108,18 @@ $iworks_a4you = new iworks_a4you();
  */
 register_activation_hook( __FILE__, 'iworks_a4you_activate' );
 register_deactivation_hook( __FILE__, 'iworks_a4you_deactivate' );
+
+/**
+ * Ask for vote
+ *
+ * @since 1.0.0
+ */
+
+include_once $vendor . '/iworks/rate/rate.php';
+do_action(
+	'iworks-register-plugin',
+	plugin_basename( __FILE__ ),
+	__( 'PLUGIN_NAME', 'a4you' ),
+	'a4you'
+);
+

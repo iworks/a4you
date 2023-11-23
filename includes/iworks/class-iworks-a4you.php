@@ -462,6 +462,25 @@ class iworks_a4you extends iworks {
 		$this->add_event( 'login', array( 'method' => 'WordPress' ) );
 	}
 
+	private function is_rest() {
+		if (
+			defined( 'REST_REQUEST' ) && REST_REQUEST // (#1)
+			|| isset( $_GET['rest_route'] ) // (#2)
+			&& strpos( $_GET['rest_route'], '/', 0 ) === 0
+		) {
+			return true;
+		}
+		// (#3)
+		global $wp_rewrite;
+		if ( $wp_rewrite === null ) {
+			$wp_rewrite = new WP_Rewrite();
+		}
+		// (#4)
+		$rest_url    = wp_parse_url( trailingslashit( rest_url() ) );
+		$current_url = wp_parse_url( add_query_arg( array() ) );
+		return strpos( $current_url['path'] ?? '/', $rest_url['path'], 0 ) === 0;
+	}
+
 	/**
 	 * maybe dev debug?
 	 */
@@ -470,6 +489,12 @@ class iworks_a4you extends iworks {
 		 * prevent in ajax
 		 */
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+			return;
+		}
+		/**
+		 * prevent in rest
+		 */
+		if ( $this->is_rest() ) {
 			return;
 		}
 		/**
@@ -487,6 +512,7 @@ class iworks_a4you extends iworks {
 			 */
 			apply_filters( 'a4you/debug/show', defined( 'IWORKS_DEV_MODE' ) && IWORKS_DEV_MODE )
 		) {
+
 			echo '<div class="iworks-a4you-debug" style="max-width:600px;margin:0 auto">';
 			foreach ( $this->gtag as $type => $values ) {
 				if ( empty( $values ) ) {

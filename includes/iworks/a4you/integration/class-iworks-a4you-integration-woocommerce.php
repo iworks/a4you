@@ -121,7 +121,7 @@ class iworks_a4you_integration_woocommerce extends iworks_a4you_integration {
 			$args['attributes']['data-a4you_add_to_cart_loop'] = 'a4you';
 			$args['attributes']['data-a4you_event']            = 'event';
 			$args['attributes']['data-a4you_event_name']       = 'add_to_cart';
-			$args['attributes']['data-a4you_event_parameters'] = json_encode( $parameters, $this->json_encode_flags );
+			$args['attributes']['data-a4you_event_parameters'] = wp_json_encode( $parameters, $this->json_encode_flags );
 		}
 		return apply_filters( 'a4you/woocommerce_loop_add_to_cart_args', $args );
 	}
@@ -193,7 +193,7 @@ class iworks_a4you_integration_woocommerce extends iworks_a4you_integration {
 			'data-a4you_event_remove_from_cart' => 'a4you',
 			'data-a4you_event'                  => 'event',
 			'data-a4you_event_name'             => 'remove_from_cart',
-			'data-a4you_event_parameters'       => json_encode( $parameters, $this->json_encode_flags ),
+			'data-a4you_event_parameters'       => wp_json_encode( $parameters, $this->json_encode_flags ),
 		);
 		foreach ( $attributes as $key => $value ) {
 			$link = preg_replace(

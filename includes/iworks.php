@@ -49,7 +49,7 @@ class iworks {
 					return md5_file( $file );
 				}
 			}
-			return rand( 0, PHP_INT_MAX );
+			return wp_rand( 0, PHP_INT_MAX );
 		}
 		return $this->version;
 	}

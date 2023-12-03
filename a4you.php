@@ -16,7 +16,7 @@
  * Requires PHP:      PLUGIN_REQUIRES_PHP
  * Author:            AUTHOR_NAME
  * Author URI:        AUTHOR_URI
- * Text Domain:       mutatio
+ * Text Domain:       a4you
  * License:           GPL v3 or later
  * License URI:       http://www.gnu.org/licenses/gpl-3.0.txt
 

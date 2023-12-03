@@ -208,7 +208,7 @@ class iworks_a4you extends iworks {
 		 * set
 		 */
 		if ( ! empty( $this->gtag['set'] ) ) {
-			printf( "gtag('set', %s);", json_encode( $this->gtag['set'], $this->json_encode_flags ) );
+			printf( "gtag('set', %s);", wp_json_encode( $this->gtag['set'], $this->json_encode_flags ) );
 			echo PHP_EOL;
 		}
 		echo '</script>',PHP_EOL;
@@ -453,7 +453,7 @@ class iworks_a4you extends iworks {
 			$patern,
 			esc_attr( $type ),
 			esc_attr( $key ),
-			json_encode( $parameters, $this->json_encode_flags )
+			wp_json_encode( $parameters, $this->json_encode_flags )
 		);
 		echo PHP_EOL;
 	}
@@ -526,7 +526,7 @@ class iworks_a4you extends iworks {
 					if ( empty( $params ) ) {
 						$params = array();
 					}
-					printf( '<td class="iworks-a4you-debug-table-params">%s</td>', json_encode( $params ) );
+					printf( '<td class="iworks-a4you-debug-table-params">%s</td>', wp_json_encode( $params ) );
 					echo '</tr>';
 				}
 				echo '</table>';

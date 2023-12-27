@@ -63,6 +63,9 @@ class iworks_a4you extends iworks {
 	 */
 	private $json_encode_flags = JSON_NUMERIC_CHECK;
 
+
+	protected $options;
+
 	public function __construct() {
 		parent::__construct();
 		$this->version    = 'PLUGIN_VERSION';

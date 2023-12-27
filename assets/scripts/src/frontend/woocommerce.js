@@ -86,38 +86,40 @@ window.addEventListener('load', function(event) {
      * gtag: select_item
      * for <section class="related products">
      */
-    document.querySelectorAll(window.a4you.woocommerce.selectors.related_products + ' a').forEach(function(element) {
-        if (!element.classList.contains('add_to_cart_button')) {
-            element.addEventListener('click', function(e) {
-                var event_parameters = {
-                    groups: window.a4you.gtag.groups,
-                };
-                var event = 'event';
-                var event_name = 'select_item';
-                if (element.closest('li').querySelectorAll('a.add_to_cart_button').length) {
-                    event_parameters = JSON.parse(element.closest(window.a4you.woocommerce.selectors.related_products).querySelectorAll('a.add_to_cart_button')[0].dataset.a4you_event_parameters);
-                }
-                if (element.closest(window.a4you.woocommerce.selectors.related_products).querySelectorAll('h2').length) {
-                    event_parameters.item_list_name = element.closest(window.a4you.woocommerce.selectors.related_products).querySelectorAll('h2')[0].innerHTML;
-                }
-                /**
-                 * debug?
-                 */
-                window.a4you.maybe_debug(
-                    event,
-                    event_name,
-                    event_parameters
-                );
-                /**
-                 * gtag
-                 */
-                gtag(
-                    'event',
-                    'add_to_cart',
-                    event_parameters
-                );
-            });
-        }
-    });
+    if ( window.a4you.woocommerce.selectors ) {
+        document.querySelectorAll(window.a4you.woocommerce.selectors.related_products + ' a').forEach(function(element) {
+            if (!element.classList.contains('add_to_cart_button')) {
+                element.addEventListener('click', function(e) {
+                    var event_parameters = {
+                        groups: window.a4you.gtag.groups,
+                    };
+                    var event = 'event';
+                    var event_name = 'select_item';
+                    if (element.closest('li').querySelectorAll('a.add_to_cart_button').length) {
+                        event_parameters = JSON.parse(element.closest(window.a4you.woocommerce.selectors.related_products).querySelectorAll('a.add_to_cart_button')[0].dataset.a4you_event_parameters);
+                    }
+                    if (element.closest(window.a4you.woocommerce.selectors.related_products).querySelectorAll('h2').length) {
+                        event_parameters.item_list_name = element.closest(window.a4you.woocommerce.selectors.related_products).querySelectorAll('h2')[0].innerHTML;
+                    }
+                    /**
+                     * debug?
+                     */
+                    window.a4you.maybe_debug(
+                        event,
+                        event_name,
+                        event_parameters
+                    );
+                    /**
+                     * gtag
+                     */
+                    gtag(
+                        'event',
+                        'add_to_cart',
+                        event_parameters
+                    );
+                });
+            }
+        });
+    }
 
 });
